@@ -3,6 +3,7 @@ class Loader {
     baseURL = "https://data.openaddresses.io/";
     writer = require('fs');
     axios = require('axios');
+    unzipper = require('unzipper');
 
     constructor(regArr) {
         this.regions = regArr;
@@ -13,6 +14,7 @@ class Loader {
     }
 
     downloadRegions() {
+        console.log("Running download");
         if (!this.writer.existsSync(this.dataDir)) {
             this.writer.mkdirSync(this.dataDir);
         }
@@ -22,10 +24,18 @@ class Loader {
                 url: this._createURL(e),
                 responseType: 'stream'
             }).then(response => {
-                let stream = this.writer.createWriteStream(`${this.dataDir}/${e}.zip`);
+                const path = `${this.dataDir}/${e}.zip`;
+                let stream = this.writer.createWriteStream(path);
                 response.data.pipe(stream);
                 stream.on('close', () => {
-                    console.log(`Finished downloading reegion: ${e} -- unzipping`);
+                    console.log(`Finished downloading region: ${e} -- unzipping`);
+                    this.writer.createReadStream(path)
+                        .pipe(this.unzipper.Extract({ path: `${this.dataDir}/${e}`}))
+                        .on('close', () => {
+                            console.log(`Done extracting region: ${e}`)
+                            this.writer.unlink(path, 
+                                () => console.log(`Removed ${path}`));
+                        });
                 }) 
             })
         });
