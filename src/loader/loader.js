@@ -13,34 +13,41 @@ class Loader {
         return this.baseURL + `openaddr-collected-us_${str}.zip`;
     }
 
+    _downloadRegion(e) {
+        this.axios({
+            method: 'get',
+            url: this._createURL(e),
+            responseType: 'stream'
+        }).then(response => {
+            const path = `${this.dataDir}/${e}.zip`;
+            let stream = this.writer.createWriteStream(path);
+            response.data.pipe(stream);
+            stream.on('close', () => {
+                console.log(`Finished downloading region: ${e} -- unzipping`);
+                this.writer.createReadStream(path)
+                    .pipe(this.unzipper.Extract({ path: `${this.dataDir}/${e}`}))
+                    .on('close', () => {
+                        console.log(`Done extracting region: ${e}`)
+                        this.writer.unlink(path, 
+                            () => console.log(`Removed ${path}`));
+                    });
+            }) 
+        }).catch(err => {
+            console.log(err);
+        });
+    }
+
     downloadRegions() {
         console.log("Running download");
         if (!this.writer.existsSync(this.dataDir)) {
             this.writer.mkdirSync(this.dataDir);
         }
         this.regions.forEach(e => {
-            this.axios({
-                method: 'get',
-                url: this._createURL(e),
-                responseType: 'stream'
-            }).then(response => {
-                const path = `${this.dataDir}/${e}.zip`;
-                let stream = this.writer.createWriteStream(path);
-                response.data.pipe(stream);
-                stream.on('close', () => {
-                    console.log(`Finished downloading region: ${e} -- unzipping`);
-                    this.writer.createReadStream(path)
-                        .pipe(this.unzipper.Extract({ path: `${this.dataDir}/${e}`}))
-                        .on('close', () => {
-                            console.log(`Done extracting region: ${e}`)
-                            this.writer.unlink(path, 
-                                () => console.log(`Removed ${path}`));
-                        });
-                }) 
-            })
+            this._downloadRegion(e);
         });
     }
 }
 
-const l = new Loader(['northeast']);
+
+const l = new Loader(['northeast', 'midwest', 'south', 'west']);
 l.downloadRegions();
