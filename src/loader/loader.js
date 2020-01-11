@@ -1,3 +1,5 @@
+const Region = require('./region.js');
+
 class Loader {
     dataDir = 'data';
     baseURL = "https://data.openaddresses.io/";
@@ -46,8 +48,16 @@ class Loader {
             this._downloadRegion(e);
         });
     }
+
+    loadRegions() {
+        this.regions.forEach(r => {
+            const reg = new Region(r, this.dataDir);
+            reg.parseFiles();
+        })
+    }
 }
 
 
-const l = new Loader(['northeast', 'midwest', 'south', 'west']);
-l.downloadRegions();
+const l = new Loader(['northeast']);
+// l.downloadRegions();
+l.loadRegions();
