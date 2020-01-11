@@ -28,11 +28,57 @@ class Address {
 
     validateLat() {
         let l = Number.parseFloat(this.lat);
-        if (isNaN(l)) {
-            return false
+        if (isNaN(l) || this.lat === undefined) {
+            return 0;
         } else {
             this.lat = l;
-            return true;
+            return 1;
+        }
+    }
+
+    validateLon() {
+        let l = Number.parseFloat(this.lon);
+        if (isNaN(l) || this.lon === undefined) {
+            return 0;
+        } else {
+            this.lon = l;
+            return 1;
+        }
+    }
+
+    validateStreet() {
+        if (this.number !== "" && this.street !== "" && this.street !== undefined && this.number !== undefined) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    validateCity(d) {
+        if (this.city === "" || this.city === undefined) {
+            let arrD = d.split('_');
+            arrD.shift();
+            arrD.shift();
+            arrD.forEach(w => {
+                return w.substring(0, 1).toUpperCase() + w.substring(1);
+            })
+            this.city = arrD.join(' ');
+        }
+        return 1;
+    }
+
+    validateState(s) {
+        if (this.state === "" || this.state === undefined) {
+            this.state = s.toUpperCase();
+        }
+        return 1;
+    }
+
+    validateZip() {
+        if (this.zip !== undefined && this.zip.length === 5) {
+            return 1;
+        } else {
+            0;
         }
     }
 }
