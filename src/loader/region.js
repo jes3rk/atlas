@@ -12,6 +12,7 @@ class Region {
         this.writer.readdir(this.filesDir, (err, contents) => {
             contents.forEach(f => {
                 const s = new State(this.filesDir + '/' + f);
+                s.parseMun();
             })
         })
     }
