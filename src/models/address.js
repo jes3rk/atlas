@@ -48,9 +48,9 @@ class Address {
 
     validateStreet() {
         if (this.number !== "" && this.street !== "" && this.street !== undefined && this.number !== undefined) {
-            return 0;
-        } else {
             return 1;
+        } else {
+            return 0;
         }
     }
 

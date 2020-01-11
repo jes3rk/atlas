@@ -38,7 +38,9 @@ class Mun {
             let rawAddr = data.split('\n');
             rawAddr.shift();
             console.log(`Initial length for ${this.path} is ${rawAddr.length}`);
-            let allAddr = rawAddr.map(a => {
+            let allAddr = [];
+            let validCount = 0;
+            rawAddr.forEach(a => {
                 let addr = Address.fromCSV(a);
                 let count = 0;
 
@@ -53,39 +55,14 @@ class Mun {
                 }
 
                 if (count === 7) {
-                    return addr;
+                    validCount++; // use artifical limiter
+                    if (validCount % 3 === 0) {
+                        allAddr.push(addr);
+                    }
                 }
                 
             })
-            // let allAddr = rawAddr.map(a => {
-            //     let addr = Address.fromCSV(a);
-
-            //     if (addr) {
-            //         if (!addr.validateLat()) {
-            //             return false;
-            //         }
-            //         if (!addr.validateLon()) {
-            //             return false;
-            //         }
-            //         if (!addr.validateStreet()) {
-            //             return false;
-            //         }
-            //         if (!addr.validateCity(this.mun)) {
-            //             return false;
-            //         }
-            //         if (!addr.validateState(this.state)) {
-            //             return false;
-            //         }
-            //         if (!addr.validateZip()) {
-            //             return false;
-            //         }
-            //         return addr;
-            //     } else {
-            //         return false;
-            //     }
-            // })
             console.log(`Final length of ${this.path} is ${allAddr.length}`);
-            // console.log(allAddr.length);
         })
     }
 }
