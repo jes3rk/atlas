@@ -1,10 +1,24 @@
 const Address = require('../models/address');
-const db = require('../models/dao');
+const Dao = require('../models/dao');
+
+const dao = new Dao();
 
 class State {
     constructor(path) {
         this.path = path;
         this.writer = require('fs');
+        let parr = this.path.split('/');
+        this.state = parr[parr.length - 1];
+        // dao.createTable(parr[parr.length - 1], [
+        //     'id SERIAL PRIMARY KEY',
+        //     'lat DOUBLE PRECISION',
+        //     'lon DOUBLE PRECISION',
+        //     'street VARCHAR(64)',
+        //     'city VARCHAR(64)',
+        //     'state VARCHAR(2)',
+        //     'zip VARCHAR(5)'
+        // ])
+        dao.insertBuffer(this.state);
     }
 
     parseMun() {
@@ -60,9 +74,14 @@ class Mun {
                     if (validCount < 1000 || validCount % 3 === 0) {
                         allAddr.push(addr);
                     }
+                    if (allAddr.length >= 1000) {
+                        dao.insertBuffer(this.state, allAddr);
+                        allAddr = [];
+                    }
                 }
                 
             })
+            dao.insertBuffer();
             console.log(`Final length of ${this.path} is ${allAddr.length}`);
 
         })

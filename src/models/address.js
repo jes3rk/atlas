@@ -90,6 +90,17 @@ class Address {
             0;
         }
     }
+
+    toInsert() {
+        return [
+            this.lat,
+            this.lon, 
+            this.number + " " + this.street,
+            this.city,
+            this.state,
+            this.zip
+        ]
+    }
 }
 
 module.exports = Address
