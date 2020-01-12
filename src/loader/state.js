@@ -1,4 +1,5 @@
 const Address = require('../models/address');
+const db = require('../models/dao');
 
 class State {
     constructor(path) {
@@ -63,6 +64,7 @@ class Mun {
                 
             })
             console.log(`Final length of ${this.path} is ${allAddr.length}`);
+
         })
     }
 }
