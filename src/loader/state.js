@@ -57,7 +57,7 @@ class Mun {
 
                 if (count === 7) {
                     validCount++; // use artifical limiter
-                    if (validCount % 3 === 0) {
+                    if (validCount < 1000 || validCount % 3 === 0) {
                         allAddr.push(addr);
                     }
                 }

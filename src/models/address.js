@@ -56,13 +56,21 @@ class Address {
 
     validateCity(d) {
         if (this.city === "" || this.city === undefined) {
-            let arrD = d.split('_');
-            arrD.shift();
-            arrD.shift();
-            arrD.forEach(w => {
-                return w.substring(0, 1).toUpperCase() + w.substring(1);
-            })
-            this.city = arrD.join(' ');
+            if (d === 'statewide') {
+                if (this.district !== undefined) {
+                    this.city = this.district;
+                } else {
+                    return 0;
+                }
+            } else {
+                let arrD = d.split('_');
+                arrD.shift();
+                arrD.shift();
+                arrD.forEach(w => {
+                    return w.substring(0, 1).toUpperCase() + w.substring(1);
+                })
+                this.city = arrD.join(' ');
+            }
         }
         return 1;
     }
@@ -75,7 +83,8 @@ class Address {
     }
 
     validateZip() {
-        if (this.zip !== undefined && this.zip.length === 5) {
+        if (this.zip !== undefined && this.zip.length >= 5) {
+            this.zip = this.zip.substr(0, 5);
             return 1;
         } else {
             0;
