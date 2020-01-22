@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/jes3rk/atlas#readme",
   "dependencies": {
+    "axios": "^0.19.2",
+    "fs": "0.0.1-security",
     "pg": "^7.17.1"
   },
   "devDependencies": {

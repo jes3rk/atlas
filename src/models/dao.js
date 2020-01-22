@@ -11,20 +11,26 @@ const p = new Pool({
 async function connect() {
     let res = await p.connect().catch(async (error) => {
         console.log('need to make db');
-        const np = new Pool({
-            user: 'postgres',
-            password: 'psql',
-            host: 'localhost',
-            port: '5432',
-            database: 'postgres'
-        })
-        await np.query('CREATE DATABASE atlas');
-        np.end()
-        return await connect();
+        await initDB();
+        return connect();
     })
     return res;
 }
 
+async function initDB() {
+    const np = new Pool({
+        user: 'postgres',
+        password: 'psql',
+        host: 'localhost',
+        port: '5432',
+        database: 'postgres'
+    })
+    await np.query('CREATE DATABASE atlas').then(async () => {
+        await np.end();
+    })
+}
+
 module.exports = {
-    connect: connect
+    connect: connect,
+    initDB: initDB
 }
