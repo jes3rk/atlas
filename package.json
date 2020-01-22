@@ -1,0 +1,22 @@
+{
+  "name": "atlas",
+  "version": "1.0.0",
+  "description": "Generating testing data is always a pain. Atlas provides a queryable, RESTful API that returns random, geolocatable addresses in the United States.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jes3rk/atlas.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jes3rk/atlas/issues"
+  },
+  "homepage": "https://github.com/jes3rk/atlas#readme",
+  "dependencies": {
+    "pg": "^7.17.1"
+  }
+}
