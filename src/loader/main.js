@@ -1,9 +1,11 @@
 const db = require('../models/dao');
 
-async function Main() {
-    let con = await db.connect();
-    console.log("hello world");
-    con.end();
+/**
+ * 
+ * @param {Array<String>} regions Array of regions corresponding to the OpenAddresses system 
+ */
+async function load(regions) {
+
 }
 
-Main();
+load(['northeast']);
