@@ -7,10 +7,11 @@ const Region = require('./classes/region');
 async function load(regions) {
     // await db.initDB();
     const rootUrl = 'https://data.openaddresses.io/openaddr-collected-us_';
-    console.log('beginning downloading');
+    console.log('beginning download');
     regions.forEach(async r => {
         const reg = new Region(r);
         await reg.download(rootUrl);
+        await reg.unpack();
     })
 }
 
