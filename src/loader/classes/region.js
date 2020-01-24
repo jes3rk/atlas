@@ -1,6 +1,7 @@
 const fs = require('fs');
 const axios = require('axios');
 const unzip = require('unzip');
+const State = require('./state');
 
 module.exports = class Region {
     /**
@@ -62,5 +63,14 @@ module.exports = class Region {
         await Region._unpack(this.name);
         // fs.unlinkSync(`data/${this.name}.zip`);
         console.log('unpacked');
+    }
+
+    async generateStates() {
+        const statesDir = `data/${this.name}/us`;
+        fs.readdirSync(statesDir).forEach(async s => {
+            let state = new State(statesDir, s);
+            await state.loadMun();
+        })
+        
     }
 }

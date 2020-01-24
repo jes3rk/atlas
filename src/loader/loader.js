@@ -10,8 +10,9 @@ async function load(regions) {
     console.log('beginning download');
     regions.forEach(async r => {
         const reg = new Region(r);
-        await reg.download(rootUrl);
-        await reg.unpack();
+        // await reg.download(rootUrl);
+        // await reg.unpack();
+        await reg.generateStates();
     })
 }
 
