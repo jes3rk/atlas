@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 module.exports = class Mun {
 
     /**
@@ -10,6 +12,9 @@ module.exports = class Mun {
         this.name = name;
     }
 
-    readFile() {
+    async readFile() {
+        fs.createReadStream(`${this.parentPath}/${this.name}`).pipe(s => {
+            console.log(s);
+        })
     }
 }

@@ -16,7 +16,7 @@ module.exports = class State {
     async loadMun() {
         fs.readdirSync(`${this.parentPath}/${this.name}`).forEach(m => {
             if (m.match('\.csv')) {
-                let mun = new Mun(this.parentPath, m);
+                let mun = new Mun(`${this.parentPath}/${this.name}`, m);
                 mun.readFile();
             }            
         })
