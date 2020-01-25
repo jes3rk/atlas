@@ -1,4 +1,5 @@
 const Pool = require('pg').Pool;
+const fs = require('fs');
 
 const p = new Pool({
     user: 'postgres',
@@ -27,7 +28,14 @@ async function initDB() {
     })
     await np.query('CREATE DATABASE atlas').then(async () => {
         await np.end();
+        let conn = await connect();
+        await conn.query(fs.readFileSync('src/models/newTable.sql').toString());
+        await conn.end();
     })
+}
+
+async function pushArr(arr) {
+    
 }
 
 module.exports = {
