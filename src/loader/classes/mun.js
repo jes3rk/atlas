@@ -27,7 +27,7 @@ module.exports = class Mun {
                 state: this.state
             })
             if (addr.isValid()) {
-                buffer.push(addr);
+                buffer.push(`(${addr.print(',')})`);
                 validCount++;
                 if (buffer.length > 1000 || i + 1 === broken.length) {
                     pushCount += buffer.length;

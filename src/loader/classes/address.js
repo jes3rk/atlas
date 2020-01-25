@@ -17,17 +17,16 @@ module.exports = class Address {
         }
     }
 
-    print() {
+    print(joinCondition=" ") {
         const arr = [
             this.lat, 
             this.lon, 
-            this.number, 
-            this.street, 
+            this.number + " " + this.street, 
             this.city,
             this.defaults.state,
             this.zip
         ];
-        console.log(arr.join(" "))
+        console.log(arr.join(joinCondition))
     }
 
     isValid() {
