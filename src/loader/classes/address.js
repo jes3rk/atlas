@@ -2,7 +2,10 @@ module.exports = class Address {
     constructor(rawInput) {
         this._isValid;
         this.rawArr = rawInput.split(',');
-        this.defaults = {};
+        this.defaults = {
+            city: '',
+            state: ''
+        };
         if (this.rawArr.length >= 9) {
             this._isValid = true;
             this.lat = 0.0;
@@ -20,7 +23,8 @@ module.exports = class Address {
             this.lon, 
             this.number, 
             this.street, 
-            this.city, 
+            this.city,
+            this.defaults.state,
             this.zip
         ];
         console.log(arr.join(" "))

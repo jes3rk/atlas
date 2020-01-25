@@ -18,18 +18,19 @@ module.exports = class Mun {
         let raw = fs.readFileSync(`${this.parentPath}/${this.name}`, { encoding: 'utf8'});
         let broken = raw.split('\n');
         let validCount = 0;
+        let validAddr = [];
         for (let i = 1; i < broken.length; i++) {
             let addr = new Address(broken[i]);
             addr.setDefaults({
-                city: Mun.fixString(this.name)
+                city: Mun.fixString(this.name),
+                state: this.state
             })
             if (addr.isValid()) {
+                validAddr.push(addr);
                 validCount++;
             }
-            if (i === 1) {
-                addr.print();
-            }
         }
+        validAddr[0].print();
         console.log(`${validCount} valid addresses for ${this.name} out of ${broken.length - 1} (${Math.floor((validCount / (broken.length - 1)) * 100)}%)`);
     }
 
@@ -43,5 +44,9 @@ module.exports = class Mun {
         return arr.map(s => {
             return s.substring(0, 1).toUpperCase() + s.substring(1);
         }).join(' ');
+    }
+
+    setState(s) {
+        this.state = s.toUpperCase();
     }
 }
