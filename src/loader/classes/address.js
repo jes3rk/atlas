@@ -2,17 +2,34 @@ module.exports = class Address {
     constructor(rawInput) {
         this._isValid;
         this.rawArr = rawInput.split(',');
+        this.defaults = {};
         if (this.rawArr.length >= 9) {
             this._isValid = true;
             this.lat = 0.0;
             this.lon = 0.0;
+            this.number = "";
+            this.street = "";
+            this.city = "";
+            this.zip = "";
         }
+    }
+
+    print() {
+        const arr = [
+            this.lat, 
+            this.lon, 
+            this.number, 
+            this.street, 
+            this.city, 
+            this.zip
+        ];
+        console.log(arr.join(" "))
     }
 
     isValid() {
         if (this._isValid) {
             let counter = 0;
-            while (counter < 8 && this._isValid) {
+            while (counter < 9 && this._isValid) {
                 this._isValid = this._validator(counter, this.rawArr[counter]);
                 counter++;
             }
@@ -53,19 +70,48 @@ module.exports = class Address {
                     return false;
                 }
             case 2:
-                return this._is(input);
+                if (this._is(input)) {
+                    this.number = input;
+                    return true;
+                } else {
+                    return false;
+                }
             case 3:
-                return this._is(input);
+                if (this._is(input)) {
+                    this.street = input;
+                    return true;
+                } else {
+                    return false;
+                }
+            case 5:
+                if (this._is(input)) {
+                    this.city = input;
+                    return true;
+                } else {
+                    this.city = this.defaults.city;
+                    return true;
+                }
+            case 8:
+                if (this._is(input)) {
+                    this.zip = input;
+                    return true;
+                } else {
+                    return false;
+                }
             default:
                 return true;
         }
     }
 
     _is(input) {
-        if (input === null || input === undefined || input.length === 0) {
-            return false;
-        } else {
+        if (input !== null && input !== undefined && input.length > 0) {
             return true;
+        } else {
+            return false;
         }
+    }
+
+    setDefaults(obj) {
+        this.defaults = obj;
     }
 }
