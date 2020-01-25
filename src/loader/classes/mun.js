@@ -18,7 +18,8 @@ module.exports = class Mun {
         let raw = fs.readFileSync(`${this.parentPath}/${this.name}`, { encoding: 'utf8'});
         let broken = raw.split('\n');
         let validCount = 0;
-        let validAddr = [];
+        let buffer = [];
+        let pushCount = 0;
         for (let i = 1; i < broken.length; i++) {
             let addr = new Address(broken[i]);
             addr.setDefaults({
@@ -26,12 +27,16 @@ module.exports = class Mun {
                 state: this.state
             })
             if (addr.isValid()) {
-                validAddr.push(addr);
+                buffer.push(addr);
                 validCount++;
+                if (buffer.length > 1000 || i + 1 === broken.length) {
+                    pushCount += buffer.length;
+                    buffer = [];
+                }
             }
         }
-        validAddr[0].print();
-        console.log(`${validCount} valid addresses for ${this.name} out of ${broken.length - 1} (${Math.floor((validCount / (broken.length - 1)) * 100)}%)`);
+        console.log(`Found ${validCount} valid addresses for ${this.name} out of ${broken.length - 1} (${Math.floor((validCount / (broken.length - 1)) * 100)}%)`);
+        console.log(`Pushed ${pushCount} addresses for ${this.name}`);
     }
 
     static fixString(input) {

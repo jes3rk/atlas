@@ -8,12 +8,12 @@ async function load(regions) {
     // await db.initDB();
     const rootUrl = 'https://data.openaddresses.io/openaddr-collected-us_';
     console.log('beginning download');
-    regions.forEach(async r => {
-        const reg = new Region(r);
+    for (let i = 0; i < regions.length; i++) {
+        const reg = new Region(regions[i]);
         // await reg.download(rootUrl);
         // await reg.unpack();
         await reg.generateStates();
-    })
+    }
 }
 
 

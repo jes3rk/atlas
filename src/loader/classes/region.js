@@ -67,10 +67,14 @@ module.exports = class Region {
 
     async generateStates() {
         const statesDir = `data/${this.name}/us`;
-        fs.readdirSync(statesDir).forEach(async s => {
-            let state = new State(statesDir, s);
+        // fs.readdirSync(statesDir).forEach(async s => {
+        //     let state = new State(statesDir, s);
+        //     await state.loadMun();
+        // })
+        const arr = fs.readdirSync(statesDir);
+        for (let i = 0; i < arr.length; i++) {
+            let state = new State(statesDir, arr[i]);
             await state.loadMun();
-        })
-        
+        }
     }
 }

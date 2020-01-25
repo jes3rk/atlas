@@ -93,7 +93,11 @@ module.exports = class Address {
                     return true;
                 } else {
                     this.city = this.defaults.city;
-                    return true;
+                    if (this.city.toLowerCase() === 'statewide') {
+                        return false;
+                    } else {
+                        return true;
+                    }
                 }
             case 8:
                 if (this._is(input)) {
