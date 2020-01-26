@@ -20,21 +20,23 @@ module.exports = class Mun {
         let validCount = 0;
         let buffer = [];
         let pushCount = 0;
-        for (let i = 1; i < broken.length; i++) {
+        let conn = await db.connect();
+        for (let i = 1; i < broken.length; i+=100) {
             let addr = new Address(broken[i]);
             addr.setDefaults({
                 city: Mun.fixString(this.name),
                 state: this.state
             })
             if (addr.isValid()) {
-                buffer.push(`(${addr.print(',')})`);
+                await conn.query({
+                    text: 'INSERT INTO addresses (lat, lon, street, city, state, zip) VALUES ($1, $2, $3, $4, $5, $6)',
+                    values: addr.insert()
+                })
+                pushCount++;
                 validCount++;
-                if (buffer.length > 1000 || i + 1 === broken.length) {
-                    pushCount += buffer.length;
-                    buffer = [];
-                }
             }
         }
+        
         console.log(`Found ${validCount} valid addresses for ${this.name} out of ${broken.length - 1} (${Math.floor((validCount / (broken.length - 1)) * 100)}%)`);
         console.log(`Pushed ${pushCount} addresses for ${this.name}`);
     }

@@ -35,10 +35,15 @@ async function initDB() {
 }
 
 async function pushArr(arr) {
-    
+    let query = `INSERT INTO addresses (lat, lon, street, city, state, zip) VALUES (${arr.join()});`;
+    console.log(query);
+    // const conn = await connect();
+    // await conn.query(query);
+    // await conn.end();
 }
 
 module.exports = {
     connect: connect,
-    initDB: initDB
+    initDB: initDB,
+    loadData: pushArr
 }

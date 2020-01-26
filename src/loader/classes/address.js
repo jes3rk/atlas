@@ -17,8 +17,8 @@ module.exports = class Address {
         }
     }
 
-    print(joinCondition=" ") {
-        const arr = [
+    insert() {
+        return [
             this.lat, 
             this.lon, 
             this.number + " " + this.street, 
@@ -26,7 +26,18 @@ module.exports = class Address {
             this.defaults.state,
             this.zip
         ];
-        console.log(arr.join(joinCondition))
+    }
+
+    print(joinCondition=" ") {
+        const arr = [
+            this.lat, 
+            this.lon, 
+            `"${this.number + " " + this.street}"`, 
+            `"${this.city}"`,
+            `"${this.defaults.state}"`,
+            `"${this.zip}"`
+        ];
+        return arr.join(joinCondition);
     }
 
     isValid() {
