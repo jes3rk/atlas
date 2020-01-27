@@ -1,5 +1,6 @@
 const fs = require('fs');
 const Mun = require('./mun');
+const db = require('../../models/dao');
 
 module.exports = class State {
 
@@ -14,12 +15,15 @@ module.exports = class State {
     }
 
     async loadMun() {
-        fs.readdirSync(`${this.parentPath}/${this.name}`).forEach(m => {
-            if (m.match('\.csv')) {
-                let mun = new Mun(`${this.parentPath}/${this.name}`, m);
+        const c = await db.connect();
+        let arr = fs.readdirSync(`${this.parentPath}/${this.name}`)
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i].match('\.csv')) {
+                let mun = new Mun(`${this.parentPath}/${this.name}`, arr[i]);
                 mun.setState(this.name);
-                mun.readFile();
+                await mun.readFile(c);
             }            
-        })
+        }
+        c.end();
     }
 }

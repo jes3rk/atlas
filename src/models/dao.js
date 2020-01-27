@@ -42,8 +42,15 @@ async function pushArr(arr) {
     // await conn.end();
 }
 
+async function index() {
+    let conn = await connect();
+    await conn.query('REINDEX addresses');
+    conn.end();
+}
+
 module.exports = {
     connect: connect,
     initDB: initDB,
-    loadData: pushArr
+    loadData: pushArr,
+    index: index
 }

@@ -14,26 +14,28 @@ module.exports = class Mun {
         this.name = name;
     }
 
-    async readFile() {
+    async readFile(conn) {
         let raw = fs.readFileSync(`${this.parentPath}/${this.name}`, { encoding: 'utf8'});
         let broken = raw.split('\n');
         let validCount = 0;
-        let buffer = [];
         let pushCount = 0;
-        let conn = await db.connect();
-        for (let i = 1; i < broken.length; i+=100) {
+        let buffer = [];
+        for (let i = 1; i < broken.length; i++) {
             let addr = new Address(broken[i]);
             addr.setDefaults({
                 city: Mun.fixString(this.name),
                 state: this.state
             })
             if (addr.isValid()) {
-                await conn.query({
-                    text: 'INSERT INTO addresses (lat, lon, street, city, state, zip) VALUES ($1, $2, $3, $4, $5, $6)',
-                    values: addr.insert()
-                })
+                // await conn.query('INSERT INTO addresses (lat, lon, street, city, state, zip) VALUES ($1, $2, $3, $4, $5, $6)', addr.insert())
                 pushCount++;
-                validCount++;
+                buffer.push(`(${addr.print(',')})`);
+                // validCount++;
+                if (buffer.length > 1000 || i === broken.length - 1) {
+                    await conn.query(`INSERT INTO addresses (lat, lon, street, city, state, zip) VALUES ${buffer.join()}`);
+                    validCount += buffer.length;
+                    buffer = [];
+                }
             }
         }
         
@@ -44,7 +46,7 @@ module.exports = class Mun {
     static fixString(input) {
         let plain = input.substring(0, input.lastIndexOf('.'));
         let arr = plain.split('_');
-        if (arr[0] === 'city') {
+        if (arr[0] === 'city' || arr[0] === 'town') {
             arr.shift();
             arr.shift();
         }

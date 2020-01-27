@@ -28,14 +28,20 @@ module.exports = class Address {
         ];
     }
 
+    static clean(string) {
+        let ret = string.replace(/'/g, "\'\'");
+        // ret = ret.replace(/"/g, "\\\"");
+        return ret;
+    }
+
     print(joinCondition=" ") {
         const arr = [
             this.lat, 
             this.lon, 
-            `"${this.number + " " + this.street}"`, 
-            `"${this.city}"`,
-            `"${this.defaults.state}"`,
-            `"${this.zip}"`
+            `'${Address.clean(this.number + " " + this.street)}'`, 
+            `'${Address.clean(this.city)}'`,
+            `'${this.defaults.state}'`,
+            `'${this.zip}'`
         ];
         return arr.join(joinCondition);
     }
@@ -111,8 +117,16 @@ module.exports = class Address {
                 }
             case 8:
                 if (this._is(input)) {
-                    this.zip = input;
-                    return true;
+                    // this.zip = input.substring(0, 5);
+                    // return true;
+                    try {
+                        const parsed = input.substring(0, 5);
+                        let c = Number.parseInt(parsed);
+                        this.zip = parsed;
+                        return true
+                    } catch (error) {
+                        return false;                        
+                    }
                 } else {
                     return false;
                 }

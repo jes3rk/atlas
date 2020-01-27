@@ -14,6 +14,7 @@ async function load(regions) {
         // await reg.unpack();
         await reg.generateStates();
     }
+    await db.index();
 }
 
 
