@@ -9,4 +9,3 @@ class TestTable(BaseORM):
 
 if __name__ == '__main__':
     t = TestTable()
-    t.print()
