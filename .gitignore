@@ -3,3 +3,4 @@ package-lock.json
 .vscode
 data
 env
+__pycache__
