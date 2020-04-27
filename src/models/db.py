@@ -10,7 +10,7 @@ class BaseORM():
         return sqlite3.connect('src/models/atlas.sqlite')
     
     @classmethod
-    def create_table(cls, db_dict: dict, options: dict = {}):
+    def create_table(cls, db_dict: dict, options: dict = None):
         if 'id' not in db_dict:
             db_dict.update({ 'id': BaseORM.ID })
         query = "CREATE TABLE IF NOT EXISTS {nme} (".format(nme=cls.__name__)
@@ -23,6 +23,12 @@ class BaseORM():
             else:
                 query += ');'
             i = i - 1
-        conn = BaseORM.connect().cursor()
-        conn.execute(query)
+        conn = BaseORM.connect()
+        c = conn.cursor()
+        c.execute(query)
+        if options is not None:
+            if 'indexes' in options:
+                for idx in options['indexes']:
+                    c.execute('CREATE INDEX IF NOT EXISTS {idx} on {tbl}({cols});'.format(idx=idx['name'], tbl=cls.__name__, cols="".join(idx['columns'])))
+        conn.commit()
         conn.close()

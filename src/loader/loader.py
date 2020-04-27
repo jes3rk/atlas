@@ -4,6 +4,7 @@ import multiprocessing
 import zipfile
 import re
 import os
+from pathlib import Path
 
 data_dir = 'data'
 
@@ -31,7 +32,8 @@ def _unzip_file_and_clean(file_name):
 
 def install_addresses(address_options):
     p = multiprocessing.Pool(multiprocessing.cpu_count())
-    p.map(_install_address, address_options)
+    # p.map(_install_address, address_options)
+    print(list(Path('data/us').rglob("*.csv")))
     p.close()
 
 
