@@ -14,5 +14,9 @@ class testFlaskApp(unittest.TestCase):
         response = self.app.get('/')
         self.assertEqual(response.status_code, 200)
 
+    def test_query_base(self):
+        response = self.app.get('/api/query')
+        self.assertEqual(response.status_code, 200)
+
 if __name__ == "__main__":
     unittest.main()

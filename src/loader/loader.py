@@ -3,6 +3,7 @@ import shutil
 import multiprocessing
 import zipfile
 import re
+import os
 
 data_dir = 'data'
 
@@ -26,6 +27,7 @@ def _unzip_file_and_clean(file_name):
     extractable = filter(lambda f_name: re.match(r'us\/.*\/.*\.csv', f_name), zf.namelist())
     zf.extractall('data', members=extractable)
     print('Finished unzipping ' + file_name)
+    os.remove('data/' + file_name)
 
 def install_addresses(address_options):
     p = multiprocessing.Pool(multiprocessing.cpu_count())
