@@ -1,4 +1,4 @@
-from db import BaseORM
+from src.models.db import BaseORM
 
 class address(BaseORM):
     housenumber: str
