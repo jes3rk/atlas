@@ -3,14 +3,15 @@ import sqlite3
 class BaseORM(): 
     TEXT = 'TEXT'
     REAL = 'REAL'
-    ID = 'INT PRIMARY KEY'
+    ID = 'INTEGER PRIMARY KEY AUTOINCREMENT'
+    INT = 'INT'
 
     @staticmethod
     def connect() -> sqlite3.Connection:
-        return sqlite3.connect('src/models/atlas.sqlite')
+        return sqlite3.connect('src/models/atlas.db')
     
     @classmethod
-    def create_table(cls, db_dict: dict, options: dict = None):
+    def create_table(cls, db_dict: dict, options: dict = None) -> None:
         if 'id' not in db_dict:
             db_dict.update({ 'id': BaseORM.ID })
         query = "CREATE TABLE IF NOT EXISTS {nme} (".format(nme=cls.__name__)
@@ -34,7 +35,7 @@ class BaseORM():
         conn.close()
     
     @classmethod
-    def from_dict(cls, d: dict) -> BaseORM:
+    def from_dict(cls, d: dict):
         c = cls()
         for k in list(cls.__dict__['__annotations__']):
             if k in d:
@@ -47,14 +48,17 @@ class BaseORM():
             keys = ", ".join(self.__dict__.keys()),
             vals = ", ".join([ '?' for k in self.__dict__.keys()])
         )
+        print(query)
         conn = BaseORM.connect()
         cur = conn.cursor()
         ret = None
         try:
-            cur.execute(query, [ str(v) for v in self.__dict__.values()])
+            cur.execute(query, tuple(self.__dict__.values()))
+            for id in list(cur.execute('SELECT last_insert_rowid()').fetchone()):
+                ret = id
             conn.commit()
-            ret = True
-        except Exception:
+        except Exception as err:
+            print(err)
             conn.rollback()
             ret = False
         finally:
