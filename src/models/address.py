@@ -8,6 +8,7 @@ class address(BaseORM):
     zipcode: str
     latitude: float
     longitude: float
+    id: int
 
 address.create_table({
     'housenumber': BaseORM.TEXT,
