@@ -1,4 +1,6 @@
 from typing import List
+import csv
+from src.models.address import address
 
 class Mun:
     file_path: str
@@ -15,6 +17,12 @@ class Mun:
         parts: List[str] = file_path.split('/')
         self.mun_name = Mun.parse_mun_name(parts.pop(-1))
         self.state = parts.pop(-1).upper()
+
+    def insert_self(self) -> List[address]:
+        c = csv.reader(open(self.file_path, 'r'))
+        for row in c:
+            print(row)
+        return None
 
     @staticmethod
     def parse_mun_name(raw_name: str) -> str:

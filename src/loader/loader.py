@@ -6,6 +6,7 @@ import re
 import os
 from pathlib import Path
 import glob
+from mun import Mun
 
 data_dir = 'data'
 
@@ -33,12 +34,16 @@ def _unzip_file_and_clean(file_name):
 
 def install_addresses(address_options):
     cores = multiprocessing.cpu_count()
-    print('Running on {c} processes'.format(c=cores))
+    print('Running with {c} processes'.format(c=cores))
     p = multiprocessing.Pool(cores)
-    p.map(_install_address, address_options)
+    # p.map(_install_address, address_options)
+    p.map(_run_insert, glob.glob('data/us/**/*.csv'))
     p.close()
 
+def _run_insert(file_path:str) -> None:
+    m = Mun(file_path)
+    m.insert_self()
 
 if __name__ == '__main__':
     install_addresses(['us_midwest.zip', 'us_northeast.zip'])
-    print(glob.glob('data/us/**/*.csv'))
+    # print(glob.glob('data/us/**/*.csv'))

@@ -1,5 +1,6 @@
 import unittest
 from src.models.address import address
+from testdata_generator import generate_valid_csv_addresses
 
 insert_dict = {
         'housenumber': '123 A',
@@ -23,13 +24,20 @@ class test_address(unittest.TestCase):
                 'id': test_address.insert_id
             })
         self.assertIsInstance(a, address)
+
+    def test_valid_address_from_csv(self):
+        raw_data = generate_valid_csv_addresses()[0] ## this should change when I make true random valid generator
+        self.assertEqual(address.from_csv(raw_data).is_valid, True)
     
     @classmethod
     def tearDownClass(cls):
-        if type(test_address.insert_id) is int:
-            address.delete({
-                'id': test_address.insert_id
-            })
+        try:
+            if type(test_address.insert_id) is int:
+                address.delete({
+                    'id': test_address.insert_id
+                })
+        except:
+            pass
 
 if __name__ == "__main__":
     unittest.main()
