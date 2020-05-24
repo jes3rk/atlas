@@ -5,6 +5,7 @@ import zipfile
 import re
 import os
 from pathlib import Path
+import glob
 
 data_dir = 'data'
 
@@ -31,11 +32,13 @@ def _unzip_file_and_clean(file_name):
     os.remove('data/' + file_name)
 
 def install_addresses(address_options):
-    p = multiprocessing.Pool(multiprocessing.cpu_count())
-    # p.map(_install_address, address_options)
-    print(list(Path('data/us').rglob("*.csv")))
+    cores = multiprocessing.cpu_count()
+    print('Running on {c} processes'.format(c=cores))
+    p = multiprocessing.Pool(cores)
+    p.map(_install_address, address_options)
     p.close()
 
 
 if __name__ == '__main__':
     install_addresses(['us_midwest.zip', 'us_northeast.zip'])
+    print(glob.glob('data/us/**/*.csv'))
