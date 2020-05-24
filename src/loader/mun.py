@@ -3,16 +3,18 @@ from typing import List
 class Mun:
     file_path: str
     mun_name: str
+    state: str
 
-    def __init__(self, file_path: str, mun_name: str) -> None:
+    def __init__(self, file_path: str) -> None:
         """Constructor for a Municipality object. Municpality objects correspond to a single CSV file in the OpenAddress datasets.
 
         Arguments:
             file_path {str} -- relative path of the file
-            mun_name {str} -- Name of the municipality
         """
         self.file_path = file_path
-        self.mun_name = mun_name
+        parts: List[str] = file_path.split('/')
+        self.mun_name = Mun.parse_mun_name(parts.pop(-1))
+        self.state = parts.pop(-1).upper()
 
     @staticmethod
     def parse_mun_name(raw_name: str) -> str:
