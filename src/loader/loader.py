@@ -6,7 +6,7 @@ import re
 import os
 from pathlib import Path
 import glob
-from mun import Mun
+from src.loader.mun import Mun
 
 data_dir = 'data'
 
@@ -42,8 +42,7 @@ def install_addresses(address_options):
 
 def _run_insert(file_path:str) -> None:
     m = Mun(file_path)
-    m.insert_self()
+    m.parse_addresses()
 
-if __name__ == '__main__':
-    install_addresses(['us_midwest.zip', 'us_northeast.zip'])
+# if __name__ == '__main__':
     # print(glob.glob('data/us/**/*.csv'))
