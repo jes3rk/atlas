@@ -4,6 +4,10 @@ from testdata_generator import create_test_csv
 
 class test_mun(unittest.TestCase):
     
+    @classmethod
+    def setUpClass(cls):
+        os.makedirs('tests/testdata/na')
+
     def test_parse_mun_name(self):
         options = [
             'city_of_mount_st_mary.csv',
@@ -30,15 +34,17 @@ class test_mun(unittest.TestCase):
         self.assertEqual(m.state, 'MA')
         self.assertEqual(m.mun_name, 'Boston')
 
-    def test_insert_self(self):
-        os.makedirs('tests/testdata/na')
+    def test_valid_parse_addresses(self):
         create_test_csv('tests/testdata/na/demo.csv')
         m = Mun('tests/testdata/na/demo.csv')
-        self.assertEqual(len(m.insert_self()), 6)
+        self.assertEqual(len(m.parse_addresses()), 6)
 
     @classmethod
     def tearDownClass(cls):
-        shutil.rmtree('tests/testdata')
+        try:
+            shutil.rmtree('tests/testdata')
+        except:
+            pass
 
 if __name__ == "__main__":
     unittest.main()

@@ -18,11 +18,15 @@ class Mun:
         self.mun_name = Mun.parse_mun_name(parts.pop(-1))
         self.state = parts.pop(-1).upper()
 
-    def insert_self(self) -> List[address]:
+    def parse_addresses(self) -> List[address]:
         c = csv.reader(open(self.file_path, 'r'))
+        index = 0
+        ret = list()
         for row in c:
-            print(row)
-        return None
+            if index != 0:
+                ret.append(address.from_csv(row))
+            index += 1
+        return ret
 
     @staticmethod
     def parse_mun_name(raw_name: str) -> str:
