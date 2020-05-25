@@ -14,6 +14,18 @@ class address(BaseORM):
 
     @staticmethod
     def from_csv(raw: List[str], state: str, city: str = None):
+        """Generate an address object given the raw CSV input matching the OpenAddress schema
+
+        Arguments:
+            raw {List[str]} -- Raw CSV data matching the OpenAddress schema
+            state {str} -- Two letter state abbreviation for the state column
+
+        Keyword Arguments:
+            city {str} -- Optional city to populate if the data does not contain a city value (default: {None})
+
+        Returns:
+            {address} -- address object
+        """
         a = address()
         a.is_valid = False
         a.state = state
@@ -38,7 +50,10 @@ class address(BaseORM):
             if _is_not_blank(raw[5]):
                 a.city = raw[5]
                 valid_count += 1
-            elif city is not None:
+            elif _is_not_blank(raw[6]):
+                a.city = raw[6]
+                valid_count += 1
+            elif city is not None and city.upper() != 'STATEWIDE':
                 a.city = city
                 valid_count += 1
 

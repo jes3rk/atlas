@@ -1,6 +1,6 @@
 import unittest, os, shutil
 from src.loader.mun import Mun
-from testdata_generator import create_test_csv
+from testdata_generator import create_test_csv, generate_csv_addresses
 
 class test_mun(unittest.TestCase):
     
@@ -37,7 +37,7 @@ class test_mun(unittest.TestCase):
     def test_valid_parse_addresses(self):
         create_test_csv('tests/testdata/na/demo.csv')
         m = Mun('tests/testdata/na/demo.csv')
-        self.assertEqual(len(m.parse_addresses()), 6)
+        self.assertEqual(len(m.parse_addresses()), 1000)
 
     @classmethod
     def tearDownClass(cls):

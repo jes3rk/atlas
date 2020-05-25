@@ -40,6 +40,11 @@ class test_address(unittest.TestCase):
                 l.extend(generate_csv_addresses(1, True, city=True))
         for addr in l:
             self.assertTrue(address.from_csv(addr,'NA', city='Valid City').is_valid)
+    
+    def test_eliminate_statewide(self):
+        l = generate_csv_addresses(1000, True, city=True)
+        for addr in l:
+            self.assertFalse(address.from_csv(addr, 'NA', city='statewide').is_valid)
 
     def test_is_blank(self):
         self.assertTrue(_is_not_blank('hello world'))

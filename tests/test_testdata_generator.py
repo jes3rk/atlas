@@ -12,7 +12,7 @@ class test_testdata_generator(unittest.TestCase):
     def test_stringify_csv_addresses(self):
         l = testdata_generator.generate_csv_addresses(1, True)[0]
         for e in l:
-            self.assertEqual(type(e), str)
+            self.assertTrue(type(e) == str or e is None)
 
     def test_3_valid_generated_addresses(self):
         l = testdata_generator.generate_csv_addresses(1000)

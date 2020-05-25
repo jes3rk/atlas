@@ -16,7 +16,7 @@ def generate_csv_addresses(length: int, stringify=False, lon=False, lat=False, n
         postcode {bool} -- Toggle for returning an invalid postcode (default: {False})
 
     Returns:
-        list -- [description]
+        list -- List of addresses matching the OpenAddress schema
     """
     import random
     ret = list()
@@ -97,7 +97,8 @@ def generate_csv_addresses(length: int, stringify=False, lon=False, lat=False, n
         if stringify:
             index = 0
             for s in local:
-                local[index] = str(s)
+                if s is not None:
+                    local[index] = str(s)
                 index += 1
         ret.append(local)
     return ret
@@ -111,7 +112,7 @@ def create_test_csv(file_name:str, data=None):
 
     Arguments:
         file_name {str} -- Filename/path to be used for the demo file
-        data {list} -- List of data to be used in the csv. Defaults to a list of valid addresses of length 6
+        data {list} -- List of data to be used in the csv. Defaults to a list of valid addresses of length 1000
     """
     import csv
     w = csv.writer(open(file_name, 'w'))
@@ -119,7 +120,7 @@ def create_test_csv(file_name:str, data=None):
         ['LON', 'LAT', 'NUMBER', 'STREET', 'UNIT', 'CITY', 'DISTRICT', 'REGION', 'POSTCODE', 'ID', 'HASH']
     ]
     if data is None:
-        rows.extend(generate_csv_addresses(6))
+        rows.extend(generate_csv_addresses(1000))
     else:
         rows.extend(data)
     w.writerows(rows)
