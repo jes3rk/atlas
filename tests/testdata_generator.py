@@ -10,7 +10,7 @@ def generate_valid_csv_addresses() -> list:
         [-72.8980698, 41.3277615, '1662', 'STATE ST' ,'0000', 'HAMDEN',None,None, '06514',None, '1db047ae91efa3eb'],
         [-72.8972739, 41.3277867, '1655', 'STATE ST', '0000', 'HAMDEN',None,None, '06514',None, '77813e6c3e8503a1'],
         [-72.896019, 41.3279622, '87', 'WELTON ST', '0000', 'HAMDEN',None,None, '06514',None, '7e9ca5f362e9e24f'],
-        [-72.8981035, 41.3279135, '1668', 'STATE ST', '0000', 'HAMDEN',None,None, '06514',None, 'b3ea3c27581e518c'],
+        [-72.8981035, 41.3279135, '1668', 'STATE ST', '0000', 'HAMDEN',None,None, '06514',None, 'b3ea3c27581e518c']
     ]
 
 def create_test_csv(file_name:str):
@@ -25,6 +25,8 @@ def create_test_csv(file_name:str):
     """
     import csv
     w = csv.writer(open(file_name, 'w'))
-    w.writerows([
+    rows = [
         ['LON', 'LAT', 'NUMBER', 'STREET', 'UNIT', 'CITY', 'DISTRICT', 'REGION', 'POSTCODE', 'ID', 'HASH']
-    ].extend(generate_valid_csv_addresses))
+    ]
+    rows.extend(generate_valid_csv_addresses())
+    w.writerows(rows)
