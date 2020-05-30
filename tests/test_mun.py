@@ -40,8 +40,11 @@ class test_mun(unittest.TestCase):
         self.assertEqual(len(m.parse_addresses()), 1000)
 
     def test_invalid_parse_addresses(self):
-        pass
-    
+        create_test_csv('tests/testdata/na/invalid.csv', generate_csv_addresses(1000, stringify=True, lon=True))
+        m = Mun('tests/testdata/na/invalid.csv')
+        for a in m.parse_addresses():
+            self.assertFalse(a.is_valid)
+
     @classmethod
     def tearDownClass(cls):
         try:

@@ -36,7 +36,7 @@ class address(BaseORM):
                 valid_count += 1
                 
             if _is_decimal(raw[1]):
-                a.latitude = float(raw[0])
+                a.latitude = float(raw[1])
                 valid_count += 1
 
             if _is_not_blank(raw[2]):
