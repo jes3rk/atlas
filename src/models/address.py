@@ -9,7 +9,7 @@ class address(BaseORM):
     zipcode: str
     latitude: float
     longitude: float
-    id: int
+    rowid: int
     is_valid: bool
 
     @staticmethod
@@ -138,7 +138,8 @@ address.create_table({
     'state': BaseORM.TEXT,
     'zipcode': BaseORM.TEXT,
     'latitude': BaseORM.REAL,
-    'longitude': BaseORM.REAL
+    'longitude': BaseORM.REAL,
+    'rowid': BaseORM.INT
 }, {
     'indexes': [{
         'name': 'idx_address_city',

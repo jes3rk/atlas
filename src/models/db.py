@@ -5,15 +5,17 @@ class BaseORM():
     REAL = 'REAL'
     ID = 'INTEGER PRIMARY KEY AUTOINCREMENT'
     INT = 'INT'
+    _table_def: dict
 
     @staticmethod
     def connect() -> sqlite3.Connection:
-        return sqlite3.connect('src/models/atlas.db')
+        return sqlite3.connect('src/models/atlas.sqlite')
     
     @classmethod
     def create_table(cls, db_dict: dict, options: dict = None) -> None:
-        if 'id' not in db_dict:
-            db_dict.update({ 'id': BaseORM.ID })
+        if 'rowid' not in db_dict:
+            db_dict.update({ 'rowid': BaseORM.ID })
+        cls._table_def = db_dict
         query = "CREATE TABLE IF NOT EXISTS {nme} (".format(nme=cls.__name__)
         items = db_dict.items()
         i = len(items)
@@ -64,16 +66,22 @@ class BaseORM():
             return ret
 
     def insert(self) -> int:
+        """Insert record into the database
+
+        Returns:
+            int -- ID of the inserted record
+        """
         query = "INSERT INTO {tbl} ({keys}) VALUES ({vals});".format(
             tbl = self.__class__.__name__,
-            keys = ", ".join(self.__dict__.keys()),
-            vals = ", ".join([ '?' for k in self.__dict__.keys()])
+            keys = ", ".join(self._table_def.keys()),
+            vals = ", ".join([ '?' for k in self._table_def.keys()])
         )
         conn = BaseORM.connect()
         cur = conn.cursor()
         ret = None
         try:
-            cur.execute(query, tuple(self.__dict__.values()))
+
+            cur.execute(query, tuple([ self.__getattribute__(n) for n in self._table_def.keys()]))
             for id in list(cur.execute('SELECT last_insert_rowid()').fetchone()):
                 ret = id
             conn.commit()
