@@ -15,9 +15,23 @@ def generate_csv_addresses(length: int, stringify=False, lon=False, lat=False, n
         city {bool} -- Toggle for returning an invalid city value (default: {False})
         postcode {bool} -- Toggle for returning an invalid postcode (default: {False})
 
+    Raises:
+        TypeError: Input parameters don't match their perscribed types
+
     Returns:
         list -- List of addresses matching the OpenAddress schema
     """
+    _types = [
+        {
+            'vars': [length],
+            'type': int
+        }, {
+            'vars': [stringify, lon, lat, number, street, city, postcode],
+            'type': bool
+        }
+    ]
+    if not _type_check(_types):
+        raise TypeError('Invalid Input Value')
     import random
     ret = list()
     while len(ret) < length:
@@ -124,3 +138,31 @@ def create_test_csv(file_name:str, data=None):
     else:
         rows.extend(data)
     w.writerows(rows)
+
+def _type_check(to_validate: list) -> bool:
+    """Check types of values.
+
+    Arguments:
+        to_validate {list} -- List of inputs to check. Format is a list of object 
+        {
+            'vars': [list, of, vars, to, check], 
+            'type': type to compare against
+        }
+
+    Raises:
+        TypeError: Input doesn't match the perscribed pattern
+
+    Returns:
+        bool -- True if all values passed in match their associated types
+    """
+    if type(to_validate) is list:
+        for t in to_validate:
+            try:
+                for v in t['vars']:
+                    if type(v) is not t['type']:
+                        return False
+            except:
+                raise TypeError('Invalid Input Parameters')
+        return True
+    else:
+        raise TypeError('Invalid Input Parameters')

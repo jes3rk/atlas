@@ -24,7 +24,9 @@ class Mun:
         ret = list()
         for row in c:
             if index != 0:
-                ret.append(address.from_csv(row, self.state, self.mun_name))
+                a = address.from_csv(row, self.state, self.mun_name)
+                if a.is_valid:
+                    ret.append(a)
             index += 1
         return ret
 

@@ -39,6 +39,9 @@ class test_mun(unittest.TestCase):
         m = Mun('tests/testdata/na/demo.csv')
         self.assertEqual(len(m.parse_addresses()), 1000)
 
+    def test_invalid_parse_addresses(self):
+        pass
+    
     @classmethod
     def tearDownClass(cls):
         try:
