@@ -36,19 +36,16 @@ def install_addresses(address_options):
         cores = 2
     print('Running with {c} processes'.format(c=cores))
     p = multiprocessing.Pool(cores)
-    # p.map(_install_address, address_options)
-    q = multiprocessing.Manager().Queue()
-    p.map_async(_run_insert, [(q, fp) for fp in glob.glob('data/us/**/*.csv')])
-    has_items = True
-    id = 0
-    while has_items:
-        try:
-            addr: address = q.get(block=True, timeout=60)
-            addr.rowid = id
-            addr.insert()
-            id += 1
-        except Exception:
-            has_items = False
+
+    index = 0
+    for g in glob.glob('data/us/**/*.csv'):
+        m: Mun = Mun(g)
+        addrs: List[address] = m.parse_addresses()
+        for a in addrs:
+            if a.is_valid:
+                a.rowid = index
+                a.insert()
+                index += 1
     p.close()
 
 def _run_insert(args) -> None:
