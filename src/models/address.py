@@ -1,5 +1,6 @@
 from src.models.db import BaseORM
 from typing import List
+import sys
 
 class address(BaseORM):
     housenumber: str
@@ -11,6 +12,9 @@ class address(BaseORM):
     longitude: float
     rowid: int
     is_valid: bool
+
+    def __sizeof__(self):
+        return object.__sizeof__(self) + sum(sys.getsizeof(v) for v in self.__dict__.values())
 
     @staticmethod
     def from_csv(raw: List[str], state: str, city: str = None):

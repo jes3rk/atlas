@@ -4,5 +4,5 @@ package-lock.json
 data
 env
 __pycache__
-*.sqlite
+*.sqlite*
 *.db

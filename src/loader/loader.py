@@ -1,4 +1,4 @@
-import requests, shutil, multiprocessing, zipfile, re, os, time
+import requests, shutil, multiprocessing, zipfile, re, os, time, psutil, sys
 from pathlib import Path
 from typing import List
 import glob
@@ -37,16 +37,34 @@ def install_addresses(address_options):
     print('Running with {c} processes'.format(c=cores))
     p = multiprocessing.Pool(cores)
 
-    index = 0
-    for g in glob.glob('data/us/**/*.csv'):
-        m: Mun = Mun(g)
-        addrs: List[address] = m.parse_addresses()
-        for a in addrs:
-            if a.is_valid:
-                a.rowid = index
-                a.insert()
-                index += 1
+    # p.map(_install_address, address_options)
+
+
+    q = multiprocessing.Manager().Queue(maxsize=(psutil.virtual_memory().total * .2) / 2000)
+
+    p.map_async(_run_insert, [(q, f) for f in glob.glob('data/us/**/*.csv')])
+
+    time.sleep(1)
+    while not q.empty():
+        a = q.get()
+        global index
+        a.rowid = index
+        a.insert()
+        index += 1
+        if index % 100 == 0:
+            print('inserted count: {c}'.format(c=index))
+
     p.close()
+    # index = 0
+    # for g in glob.glob('data/us/**/*.csv'):
+    #     m: Mun = Mun(g)
+    #     addrs: List[address] = m.parse_addresses()
+    #     for a in addrs:
+    #         if a.is_valid:
+    #             a.rowid = index
+    #             a.insert()
+    #             index += 1
+    # p.close()
 
 def _run_insert(args) -> None:
     q = args[0]
@@ -56,6 +74,7 @@ def _run_insert(args) -> None:
     for a in addrs:
         if a.is_valid:
             q.put(a)
+    print('done with {f}'.format(f=file_path))
 
 # if __name__ == '__main__':
     # print(glob.glob('data/us/**/*.csv'))
