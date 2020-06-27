@@ -3,8 +3,7 @@ from pathlib import Path
 from typing import List
 import glob
 from functools import partial
-from src.loader.mun import Mun
-from src.models.address import address
+from atlas.loader.mun import Mun
 
 data_dir = 'data'
 
