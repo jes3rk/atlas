@@ -1,6 +1,5 @@
 from typing import List
 import csv
-from src.models.address import address
 
 class Mun:
     file_path: str
